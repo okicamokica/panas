@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panasonic Tajmer</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlBla2FjIFRham1lciIsCiAgInNob3J0X25hbWUiOiAiUGVrYWMiLAogICJzdGFydF91cmwiOiAiLiIsCiAgImRpc3BsYXkiOiAic3RhbmRhbG9uZSIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiIzAwMDAwMCIsCiAgInRoZW1lX2NvbG9yIjogIiM4YjVjZjYiCn0=">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        body {
+            background: radial-gradient(circle at top, #1e1b4b 0%, #000000 100%);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        input {
+            background: rgba(255, 255, 255, 0.07) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: #fff !important;
+            color-scheme: dark;
+            transition: all 0.3s ease;
+        }
+        input:focus {
+            border-color: #8b5cf6 !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+        }
+        .result-glow {
+            text-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <div class="glass-card p-8 w-full max-w-sm">
+        <header class="text-center mb-10">
+            <div class="inline-block p-3 bg-indigo-500/20 rounded-2xl mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-black tracking-tight uppercase">Pekač <span class="text-indigo-400">Timer</span></h1>
+        </header>
+
+        <div class="space-y-8">
+            <!-- Trenutno vrijeme -->
+            <div class="relative">
+                <label class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Sada je:</label>
+                <input type="time" id="currentTime" class="w-full p-5 rounded-2xl text-2xl font-bold outline-none">
+                <button onclick="setNow()" class="absolute right-4 bottom-4 text-indigo-400 text-xs font-bold hover:text-white transition-colors">OSVJEŽI</button>
+            </div>
+
+            <!-- Vrijeme završetka (Sada po defaultu 06:20) -->
+            <div>
+                <label class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Kruh gotov u:</label>
+                <input type="time" id="targetTime" value="06:20" class="w-full p-5 rounded-2xl text-2xl font-bold outline-none">
+            </div>
+
+            <!-- Glavni rezultat -->
+            <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-1 rounded-3xl shadow-xl">
+                <div class="bg-black/40 backdrop-blur-md rounded-[calc(1.5rem+4px)] p-6 text-center">
+                    <span class="text-[10px] font-black text-indigo-300 uppercase tracking-[0.2em]">Postavka pekača:</span>
+                    <div id="result" class="text-5xl font-black text-white result-glow mt-1 italic">
+                        --:--
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="text-[10px] text-gray-500 text-center mt-8 leading-relaxed">
+            Izračunato za Panasonic sustav odgode.<br>Samo unesi dobiveni broj na ekran uređaja.
+        </p>
+    </div>
+
+    <script>
+        const currentInput = document.getElementById('currentTime');
+        const targetInput = document.getElementById('targetTime');
+        const resultDisplay = document.getElementById('result');
+
+        function setNow() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            currentInput.value = `${hours}:${minutes}`;
+            calculate();
+        }
+
+        function calculate() {
+            if (!currentInput.value || !targetInput.value) return;
+
+            const [currH, currM] = currentInput.value.split(':').map(Number);
+            const [tarH, tarM] = targetInput.value.split(':').map(Number);
+
+            let diffMinutes = (tarH * 60 + tarM) - (currH * 60 + currM);
+
+            // Ako je vrijeme doručka u budućnosti (idući dan)
+            if (diffMinutes <= 0) {
+                diffMinutes += 24 * 60;
+            }
+
+            const resH = Math.floor(diffMinutes / 60);
+            const resM = diffMinutes % 60;
+
+            // Panasonic format npr 9:30 ili 10:05
+            resultDisplay.innerText = `${resH}:${String(resM).padStart(2, '0')}`;
+        }
+
+        [currentInput, targetInput].forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // Pokreni odmah
+        setNow();
+
+        // Osvježavaj trenutno vrijeme svakih 30 sekundi automatski
+        setInterval(setNow, 30000);
+    </script>
+</body>
+</html>
