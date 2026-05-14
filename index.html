@@ -3,129 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panasonic Tajmer</title>
+    <title>Panasonic Timer</title>
     <link rel="manifest" href="manifest.json">
-    </script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        /* Direktni CSS - popravlja izgled sa slike 1000058898.png */
         body {
-            background: radial-gradient(circle at top, #1e1b4b 0%, #000000 100%);
+            background: #0a0a0c;
             color: white;
-            min-height: 100vh;
+            font-family: sans-serif;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-family: 'Inter', sans-serif;
+            align-items: center;
+            min-height: 100vh;
             margin: 0;
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        .card {
+            background: #16161a;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #2d2d35;
+        }
+        .icon {
+            width: 60px; /* Popravlja ogromnu ikonu sa slike */
+            height: 60px;
+            margin-bottom: 1rem;
         }
         input {
-            background: rgba(255, 255, 255, 0.07) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
-            color: #fff !important;
-            color-scheme: dark;
-            transition: all 0.3s ease;
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #333;
+            background: #222;
+            color: white;
+            font-size: 1.2rem;
+            box-sizing: border-box;
         }
-        input:focus {
-            border-color: #8b5cf6 !important;
-            background: rgba(255, 255, 255, 0.12) !important;
-            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+        .result-box {
+            background: #4f46e5;
+            padding: 15px;
+            border-radius: 15px;
+            margin-top: 20px;
         }
-        .result-glow {
-            text-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+        .result-val {
+            font-size: 3rem;
+            font-weight: bold;
+            display: block;
+        }
+        button {
+            background: none;
+            border: none;
+            color: #818cf8;
+            cursor: pointer;
+            font-size: 0.8rem;
+            text-decoration: underline;
         }
     </style>
 </head>
-<body class="p-4">
+<body>
 
-    <div class="glass-card p-8 w-full max-w-sm">
-        <header class="text-center mb-10">
-            <div class="inline-block p-3 bg-indigo-500/20 rounded-2xl mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </div>
-            <h1 class="text-2xl font-black tracking-tight uppercase">Pekač <span class="text-indigo-400">Timer</span></h1>
-        </header>
+<div class="card">
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    
+    <h2 style="margin: 0 0 20px 0;">Pekač Timer</h2>
 
-        <div class="space-y-8">
-            <!-- Trenutno vrijeme -->
-            <div class="relative">
-                <label class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Sada je:</label>
-                <input type="time" id="currentTime" class="w-full p-5 rounded-2xl text-2xl font-bold outline-none">
-                <button onclick="setNow()" class="absolute right-4 bottom-4 text-indigo-400 text-xs font-bold hover:text-white transition-colors">OSVJEŽI</button>
-            </div>
-
-            <!-- Vrijeme završetka (Sada po defaultu 06:20) -->
-            <div>
-                <label class="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1 mb-2 block">Kruh gotov u:</label>
-                <input type="time" id="targetTime" value="06:20" class="w-full p-5 rounded-2xl text-2xl font-bold outline-none">
-            </div>
-
-            <!-- Glavni rezultat -->
-            <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-1 rounded-3xl shadow-xl">
-                <div class="bg-black/40 backdrop-blur-md rounded-[calc(1.5rem+4px)] p-6 text-center">
-                    <span class="text-[10px] font-black text-indigo-300 uppercase tracking-[0.2em]">Postavka pekača:</span>
-                    <div id="result" class="text-5xl font-black text-white result-glow mt-1 italic">
-                        --:--
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <p class="text-[10px] text-gray-500 text-center mt-8 leading-relaxed">
-            Izračunato za Panasonic sustav odgode.<br>Samo unesi dobiveni broj na ekran uređaja.
-        </p>
+    <div style="text-align: left;">
+        <label style="font-size: 0.8rem; color: #aaa;">SADA JE:</label>
+        <input type="time" id="currentTime">
+        <button onclick="setNow()">OSVJEŽI VRIJEME</button>
+        
+        <label style="font-size: 0.8rem; color: #aaa; display: block; margin-top: 15px;">KRUH GOTOV U:</label>
+        <input type="time" id="targetTime" value="06:20">
     </div>
 
-    <script>
-        const currentInput = document.getElementById('currentTime');
-        const targetInput = document.getElementById('targetTime');
-        const resultDisplay = document.getElementById('result');
+    <div class="result-box">
+        <span style="font-size: 0.7rem; opacity: 0.8;">POSTAVKA PEKAČA:</span>
+        <span id="result" class="result-val">--:--</span>
+    </div>
 
-        function setNow() {
-            const now = new Date();
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            currentInput.value = `${hours}:${minutes}`;
-            calculate();
-        }
+    <p style="font-size: 0.7rem; color: #666; margin-top: 20px;">
+        Izračunato za Panasonic sustav odgode.
+    </p>
+</div>
 
-        function calculate() {
-            if (!currentInput.value || !targetInput.value) return;
+<script>
+    const currentInput = document.getElementById('currentTime');
+    const targetInput = document.getElementById('targetTime');
+    const resultDisplay = document.getElementById('result');
 
-            const [currH, currM] = currentInput.value.split(':').map(Number);
-            const [tarH, tarM] = targetInput.value.split(':').map(Number);
+    function setNow() {
+        const now = new Date();
+        currentInput.value = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        calculate();
+    }
 
-            let diffMinutes = (tarH * 60 + tarM) - (currH * 60 + currM);
+    function calculate() {
+        const [currH, currM] = currentInput.value.split(':').map(Number);
+        const [tarH, tarM] = targetInput.value.split(':').map(Number);
+        let diff = (tarH * 60 + tarM) - (currH * 60 + currM);
+        if (diff <= 0) diff += 1440;
+        resultDisplay.innerText = `${Math.floor(diff / 60)}:${String(diff % 60).padStart(2, '0')}`;
+    }
 
-            // Ako je vrijeme doručka u budućnosti (idući dan)
-            if (diffMinutes <= 0) {
-                diffMinutes += 24 * 60;
-            }
+    [currentInput, targetInput].forEach(i => i.addEventListener('input', calculate));
+    setNow();
+</script>
 
-            const resH = Math.floor(diffMinutes / 60);
-            const resM = diffMinutes % 60;
-
-            // Panasonic format npr 9:30 ili 10:05
-            resultDisplay.innerText = `${resH}:${String(resM).padStart(2, '0')}`;
-        }
-
-        [currentInput, targetInput].forEach(input => {
-            input.addEventListener('input', calculate);
-        });
-
-        // Pokreni odmah
-        setNow();
-
-        // Osvježavaj trenutno vrijeme svakih 30 sekundi automatski
-        setInterval(setNow, 30000);
-    </script>
 </body>
 </html>
